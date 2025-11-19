@@ -1,0 +1,52 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="plants-page">
+    <div class="page-header">
+
+        {% if plants %}
+        <h1>Search Plants ({{plants.count}})</h1>
+        <h5>results for: {{request.GET.search}}</h5>
+
+        {% else %}
+        <p>No results found for your search "{{request.GET.search}}"</p>
+
+        {% endif %}
+        <p class="subtitle">Discover Our Collection</p>
+    </div>
+
+    <div class="plants-grid">
+        {% for plant in plants %}
+        <article class="plant-card">
+            <img class="plant-thumb" src="{{ plant.image.url }}" alt="{{ plant.name }}">
+            <div class="plant-body">
+                <h3 class="plant-title">
+                    <a href="{% url 'plants:plant_details_view' plant.id %}">
+                        {{ plant.name }}</a></h3>
+
+                <div class="meta-row">
+                    <span class="category">{{ plant.category|capfirst }}</span>
+                    {% if plant.is_edible %}
+                    <span class="edible">🍽️ edible</span>
+                    {% endif %}
+                </div>
+
+                <p class="plant-about">{{ plant.about }}</p>
+                <p class="plant-used">{{ plant.used_for }}</p>
+
+                <div class="card-footer">
+                    <time class="created" datetime="{{ plant.created_at|date:'c' }}">
+                        {{ plant.created_at|date:"M d, Y" }}
+                    </time>
+                    <a class="view-link" href="{% url 'plants:plant_details_view' plant.id %}">View</a>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <p>No Plants...</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

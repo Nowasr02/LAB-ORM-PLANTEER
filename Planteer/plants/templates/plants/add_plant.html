@@ -1,0 +1,65 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Add Plant{% endblock %}
+
+{% block content %}
+
+<div class="row plant-form-container">
+
+    <div class="col-5">
+        <form class="plant-form" action="{% url 'plants:add_plant_view' %}" method="post" enctype="multipart/form-data">
+            <h2>Add a New Plant</h2>
+
+            {% csrf_token %}
+
+            <input type="text" placeholder="Name" name="name" required/>
+
+            <textarea placeholder="About" name="about" required></textarea>
+
+            <textarea placeholder="Used for" name="used_for" required></textarea>
+
+            <label class="label-title">Category:</label>
+            <div class="category-choices">
+                <label class="category-option">
+                    <input type="radio" name="category" value="ornamental"> Ornamental
+                </label>
+
+                <label class="category-option">
+                    <input type="radio" name="category" value="indoor" checked> Indoor
+                </label>
+
+                <label class="category-option">
+                    <input type="radio" name="category" value="outdoor"> Outdoor
+                </label>
+
+                <label class="category-option">
+                    <input type="radio" name="category" value="flowering"> Flowering
+                </label>
+            </div>
+
+            <label class="label-title">Is the plant edible?</label>
+
+            <div class="edible-options">
+                <label class="option">
+                    <input type="radio" name="is_edible" value="true">
+                    Yes
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="is_edible" value="false" checked>
+                    No
+                </label>
+            </div>
+
+            <input type="datetime-local" name="created_at" required>
+
+            <label class="label-title">Plant Image</label>
+            <input type="file" name="image" class="file-input" required accept="image/*">
+
+            <button type="submit" class="btn submit-btn">Add Plant</button>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

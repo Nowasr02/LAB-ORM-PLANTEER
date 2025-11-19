@@ -1,0 +1,121 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="plant-detail-page">
+
+    <div class="detail-card">
+
+        <div class="image-section">
+            <img src="{{ plant.image.url }}" alt="{{ plant.name }}">
+        </div>
+
+        <div class="info-section">
+
+            <h1 class="plant-title">{{ plant.name }}</h1>
+
+            <div class="meta">
+
+                <span class="category">{{ plant.category|capfirst }}</span>
+
+                {% if plant.is_edible %}
+                <span class="edible">🍽️ Edible</span>
+                {% endif %}
+            </div>
+
+            <div class="detail-block">
+                <h3>About</h3>
+                <p>{{ plant.about }}</p>
+            </div>
+
+            <div class="detail-block">
+                <h3>Used for</h3>
+                <p>{{ plant.used_for }}</p>
+            </div>
+
+            <div class="detail-block">
+                <h3>Added on</h3>
+                <p>{{ plant.created_at|date:"F d, Y" }}</p>
+            </div>
+
+            <div class="details-btns">
+                <a class="btn details-actions" href="{% url 'plants:all_plants_view' %}">←</a>
+                <a class="btn details-actions" href="{% url 'plants:update_plant_view' plant.id %}">Update Plant</a>
+                <button type="button" class="btn details-actions" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    delete
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="plants-page">
+    <div class="page-header">
+        <h1>Similar Plants...</h1>
+        <div class="plants-grid">
+        </div>
+    </div>
+
+    <div class="plants-grid">
+        {% for plant in plants %}
+        <article class="plant-card">
+            <img class="plant-thumb" src="{{ plant.image.url }}" alt="{{ plant.name }}">
+            <div class="plant-body">
+                <h3 class="plant-title">
+                    <a href="{% url 'plants:plant_details_view' plant.id %}">
+                        {{ plant.name }}</a>
+                </h3>
+
+                <div class="meta-row">
+                    <span class="category">{{ plant.category|capfirst }}</span>
+                    {% if plant.is_edible %}
+                    <span class="edible">🍽️ edible</span>
+                    {% endif %}
+                </div>
+
+                <p class="plant-about">{{ plant.about }}</p>
+                <p class="plant-used">{{ plant.used_for }}</p>
+
+                <div class="card-footer">
+                    <time class="created" datetime="{{ plant.created_at|date:'c' }}">
+                        {{ plant.created_at|date:"M d, Y" }}
+                    </time>
+                    <a class="view-link" href="{% url 'plants:plant_details_view' plant.id %}">View</a>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <p>No Plants...</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Post</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete {{ plant.name }}?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'plants:delete_plant_view' plant.id %}" class="btn btn-delete">Delete</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

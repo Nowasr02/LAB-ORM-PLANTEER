@@ -1,0 +1,60 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Update Plant{% endblock %}
+
+{% block content %}
+<div class="row plant-form-container">
+    <div class="col-5">
+        <form class="plant-form" action="{% url 'plants:update_plant_view' plant.id %}" method="post"
+            enctype="multipart/form-data">
+            <h2>Update {{ plant.name }}</h2>
+            {% csrf_token %}
+
+            <input type="text" placeholder="Name" name="name" value="{{ plant.name }}" />
+
+            <textarea placeholder="About" name="about">{{ plant.about }}</textarea>
+
+            <textarea placeholder="Used for" name="used_for">{{ plant.used_for }}</textarea>
+
+            <label class="label-title">Category:</label>
+            <div class="category-choices">
+                <label class="category-option">
+                    <input type="radio" name="category" value="ornamental" {% if plant.category == 'ornamental' %}checked{% endif %}>
+
+                </label>
+
+                <label class="category-option">
+                    <input type="radio" name="category" value="indoor" {% if plant.category == 'indoor' %}checked{% endif %}>
+                    Indoor
+                </label>
+
+                <label class="category-option">
+                    <input type="radio" name="category" value="outdoor" {% if plant.category == 'outdoor' %}checked{% endif %}>
+                    Outdoor
+                </label>
+
+                <label class="category-option">
+                    <input type="radio" name="category" value="flowering" {% if plant.category == 'flowering' %}checked{% endif %}>
+                    Flowering
+                </label>
+            </div>
+
+            <label class="label-title">Is the plant edible?</label>
+
+            <input type="radio" name="is_edible" value="true" {% if plant.is_edible %}checked{% endif %}>
+            <span>Yes</span>
+            <input type="radio" name="is_edible" value="false" {% if not plant.is_edible %}checked{% endif %}>
+            <span>No</span>
+
+            <input type="datetime-local" name="created_at" value="{{ plant.created_at|date:'Y-m-d\\TH:i' }}">
+
+            {% if plant.image %}
+            <img src="{{ plant.image.url }}" alt="{{ plant.name }}" style="max-width:220px;">
+            {% endif %}
+            <input type="file" name="image">
+
+            <input type="submit" class="btn submit-btn" value="Update Plant">
+        </form>
+    </div>
+</div>
+{% endblock %}
