@@ -12,7 +12,7 @@
 
             {% csrf_token %}
 
-            <input type="text" placeholder="Name" name="name" required/>
+            <input type="text" placeholder="Name" name="name" required />
 
             <textarea placeholder="About" name="about" required></textarea>
 
@@ -53,8 +53,17 @@
 
             <input type="datetime-local" name="created_at" required>
 
+            <h3>Countries</h3>
+            {% for country in countries %}
+            <input type="checkbox" class="form-check-input" name="countries" id="check-{{country.id}}" value="{{country.id}}">
+            <label for="check-{{country.id}}">{{country.name}}</label>
+            <br>
+            {% endfor %}
+            <br>
             <label class="label-title">Plant Image</label>
             <input type="file" name="image" class="file-input" required accept="image/*">
+
+
 
             <button type="submit" class="btn submit-btn">Add Plant</button>
 

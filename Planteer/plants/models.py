@@ -1,6 +1,14 @@
 from django.db import models
 
 # Create your models here.
+
+class Country(models.Model):
+    name = models.CharField(max_length = 128, unique = True)
+    flag = models.ImageField(upload_to="images/")
+    
+    def __str__(self):
+        return self.name
+    
 class Plant(models.Model):
     class Category(models.TextChoices):
         ORNAMENTAL = 'ornamental'
@@ -18,3 +26,23 @@ class Plant(models.Model):
     )
     is_edible = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    countries = models.ManyToManyField(Country)
+    
+    def __str__(self):
+        return self.name
+
+class Review(models.Model):
+    plant = models.ForeignKey(Plant, on_delete = models.CASCADE)
+    
+    name = models.CharField(max_length = 1024)
+    rating = models.SmallIntegerField()
+    comment = models.TextField()
+    review_date = models.DateTimeField(auto_now_add = True)
+    
+    def __str__(self):
+        return f"{self.name} on {self.plant.name}"
+    
+    
+
+    

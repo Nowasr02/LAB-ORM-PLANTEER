@@ -15,6 +15,13 @@
 
             <h1 class="plant-title">{{ plant.name }}</h1>
 
+            <div class="d-flex gap-2">
+                <p>found in:</p>
+                {% for country in plant.countries.all %}
+                <p>{{ country }} {% if not forloop.last %} - {% endif %} </p>
+                {% endfor %}
+            </div>
+
             <div class="meta">
 
                 <span class="category">{{ plant.category|capfirst }}</span>
@@ -93,6 +100,40 @@
         {% endfor %}
     </div>
 
+</div>
+
+<div>
+
+    {% for review in reviews %}
+    <h2>Add Comment ({{reviews.count}})</h2>
+    <div>
+        <h4>{{review.name}}</h4>
+        <p>{{review.comment}}</p>
+        <p class="text-muted">{{review.review_date}}</p>
+    </div>
+    {% endfor %}
+</div>
+<div class="col-5">
+    <form class="plant-form" action="{% url 'plants:add_review_view' plant.id%}" method="post">
+        {% csrf_token %}
+
+        <h2>Comments</h2>
+        <input class="form-control" name="name" required minlength="3" placeholder="Name">
+        <textarea class="form-control" name="comment" required minlength="3" placeholder="Comment">
+            </textarea>
+        <select class="form-select" name="rating">
+            <option value="">Rating</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+
+        <input type="submit" class="btn submit-btn" value="Send Review">
+
+
+    </form>
 </div>
 
 

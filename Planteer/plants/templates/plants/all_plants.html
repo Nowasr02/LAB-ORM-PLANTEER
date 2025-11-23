@@ -19,6 +19,13 @@
             <option value="0" {% if request.GET.is_edible == '0' %}selected{% endif %}>Non-Edible</option>
         </select>
 
+        <select name="country">
+            <option value="">Countries</option>
+            {% for country in countries %}
+                <option value="{{ country }}" {% if request.GET.country == country %}selected{% endif %}>{{ country }}</option>
+            {% endfor %}
+        </select>
+
         <button type="submit">Filter</button>
     </form>
 </div>
