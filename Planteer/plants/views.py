@@ -46,7 +46,7 @@ def all_plants_view(request : HttpRequest):
         plants = plants.filter(category = category)
         
     is_edible = request.GET.get('is_edible')
-    if is_edible:
+    if is_edible is not None and is_edible != "":
         if is_edible.lower() in ['1', 'true', 'yes']:
             plants = plants.filter(is_edible=True)
         elif is_edible.lower() in ['0', 'false', 'no']:
@@ -56,14 +56,18 @@ def all_plants_view(request : HttpRequest):
     
     country = request.GET.get('country')
     if country:
-        plants = plants.filter(countries__name = country)
+        plants = plants.filter(countries__name__iexact = country)
         
     countries = Country.objects.values_list('name', flat=True).distinct()
+    
+
+        
     return render(request, "plants/all_plants.html", {
         "plants": plants,
         "categories": categories,
         "countries" : countries,
     })
+    
 
 def plant_details_view(request : HttpRequest, plant_id:int):
     plant = Plant.objects.get(pk = plant_id)

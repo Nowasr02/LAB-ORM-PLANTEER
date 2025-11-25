@@ -3,7 +3,6 @@
 
 {% block content %}
 
-
 <div class="filter-bar">
     <form method="get">
         <select name="category">
@@ -30,7 +29,6 @@
     </form>
 </div>
 
-
 <div class="plants-page">
     <div class="page-header">
         <h1>Our Full Collection</h1>
@@ -39,38 +37,6 @@
         </div>
     </div>
 
-    <div class="plants-grid">
-        {% for plant in plants %}
-        <article class="plant-card">
-            <img class="plant-thumb" src="{{ plant.image.url }}" alt="{{ plant.name }}">
-            <div class="plant-body">
-                <h3 class="plant-title">
-                    <a href="{% url 'plants:plant_details_view' plant.id %}">
-                        {{ plant.name }}</a>
-                </h3>
+{% include 'plants/plants_list.html' %}
 
-                <div class="meta-row">
-                    <span class="category">{{ plant.category|capfirst }}</span>
-                    {% if plant.is_edible %}
-                    <span class="edible">🍽️ edible</span>
-                    {% endif %}
-                </div>
-
-                <p class="plant-about">{{ plant.about }}</p>
-                <p class="plant-used">{{ plant.used_for }}</p>
-
-                <div class="card-footer">
-                    <time class="created" datetime="{{ plant.created_at|date:'c' }}">
-                        {{ plant.created_at|date:"M d, Y" }}
-                    </time>
-                    <a class="view-link" href="{% url 'plants:plant_details_view' plant.id %}">View</a>
-                </div>
-            </div>
-        </article>
-        {% empty %}
-        <p>No Plants...</p>
-        {% endfor %}
-    </div>
-
-</div>
 {% endblock %}

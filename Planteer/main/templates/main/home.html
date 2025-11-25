@@ -4,50 +4,26 @@
 
 {% block content %}
 
-    <div class="hero">
-        <h2>Welcome to Planteer</h2>
-        <p>Explore a vast collection of unique plants and discover their uses and secrets.</p>
-        <a class="btn-primary btn" href="{% url 'plants:all_plants_view' %}">Discover Our Plants</a>
-    </div>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="hero">
+    <h2>Welcome to Planteer</h2>
+    <p>Explore a vast collection of unique plants and discover their uses and secrets.</p>
+    <a class="btn-primary btn" href="{% url 'plants:all_plants_view' %}">Discover Our Plants</a>
+</div>
 
 
 <section class="newest">
     <h2>Discover Our Latest Plants</h2>
     <br>
+    {% include 'plants/plants_list.html' %}
 
-    <div class="plants-grid">
-        {% for plant in plants %}
-        <article class="plant-card">
-            <img class="plant-thumb" src="{{ plant.image.url }}" alt="{{ plant.name }}">
-            <div class="plant-body">
-                <h3 class="plant-title">
-                    <a href="{% url 'plants:plant_details_view' plant.id %}">
-                        {{ plant.name }}</a>
-                </h3>
-
-                <div class="meta-row">
-                    <span class="category">{{ plant.category|capfirst }}</span>
-                    {% if plant.is_edible %}
-                    <span class="edible">🍽️ edible</span>
-                    {% endif %}
-                </div>
-
-                <p class="plant-about">{{ plant.about }}</p>
-                <p class="plant-used">{{ plant.used_for }}</p>
-
-                <div class="card-footer">
-                    <time class="created" datetime="{{ plant.created_at|date:'c' }}">
-                        {{ plant.created_at|date:"M d, Y" }}
-                    </time>
-                    <a class="view-link" href="{% url 'plants:plant_details_view' plant.id %}">View</a>
-                </div>
-            </div>
-        </article>
-        {% empty %}
-        <p>No Plants...</p>
-        {% endfor %}
-
-    </div>
 </section>
 
 {% endblock %}

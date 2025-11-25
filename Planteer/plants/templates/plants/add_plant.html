@@ -6,7 +6,6 @@
 
 <div class="row plant-form-container">
 
-    <div class="col-5">
         <form class="plant-form" action="{% url 'plants:add_plant_view' %}" method="post" enctype="multipart/form-data">
             <h2>Add a New Plant</h2>
 
@@ -55,20 +54,19 @@
 
             <h3>Countries</h3>
             {% for country in countries %}
-            <input type="checkbox" class="form-check-input" name="countries" id="check-{{country.id}}" value="{{country.id}}">
+            <input type="checkbox" class="form-check-input" name="countries" id="check-{{country.id}}"
+                value="{{country.id}}">
             <label for="check-{{country.id}}">{{country.name}}</label>
             <br>
             {% endfor %}
+
             <br>
             <label class="label-title">Plant Image</label>
             <input type="file" name="image" class="file-input" required accept="image/*">
-
-
 
             <button type="submit" class="btn submit-btn">Add Plant</button>
 
         </form>
     </div>
-</div>
 
 {% endblock %}
