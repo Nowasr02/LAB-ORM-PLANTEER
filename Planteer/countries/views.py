@@ -3,9 +3,16 @@ from django.http import HttpRequest, HttpResponse
 from plants.models import Plant
 from .models import Country
 from .forms import CountryForm
+from django.contrib import messages
+
 
 # Create your views here.
 def add_country_view(request: HttpRequest):
+    
+    if not request.user.is_authenticated:
+        messages.success(request, "Only admin can add countries")
+        return redirect("accounts:sign_in")
+
     if request.method == "POST":
         country_form = CountryForm(request.POST, request.FILES)
         if country_form.is_valid():

@@ -25,8 +25,13 @@
                 <time class="created" datetime="{{ plant.created_at|date:'c' }}">
                     {{ plant.created_at|date:"M d, Y" }}
                 </time>
-                <a class="view-link" href="{% url 'plants:plant_details_view' plant.id %}">View</a>
+
+                <div class="comments-icon">
+                    <h5>{{ plant.reviews_count }}</h5>
+                    <span class="material-symbols-outlined">chat_bubble</span>
+                </div>
             </div>
+
         </div>
     </article>
     {% empty %}

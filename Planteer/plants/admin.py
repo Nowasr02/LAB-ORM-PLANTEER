@@ -9,7 +9,7 @@ class PlantAdmin(admin.ModelAdmin):
     
     
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ("name", "plant", "rating")
+    list_display = ("user", "plant", "rating")
     list_filter = ("rating",)
     
 admin.site.register(Plant, PlantAdmin)

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
+
 # Create your views here.
 
 
@@ -36,7 +37,7 @@ def signin_view(request : HttpRequest):
         if user:
             login(request, user)
             messages.success(request, "logged in successfuly", "alert-success")
-            return redirect("main:home_view")
+            return redirect(request.GET.get("next", "/"))
         else:
             messages.error(request, "Please try again, your info is wrong", "alert-danger")
      

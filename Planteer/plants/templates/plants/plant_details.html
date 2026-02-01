@@ -14,6 +14,7 @@
         <div class="info-section">
 
             <h1 class="plant-title">{{ plant.name }}</h1>
+            <p class="">{{ average_rating }}</p>
 
             <div class="d-flex gap-2">
                 <p>found in:</p>
@@ -21,8 +22,8 @@
                 {% for country in plant.countries.all %}
                 <p>{{ country.name }} {% if not forloop.last %} - {% endif %} </p>
                 {% empty %}
-                    <span>No countries listed</span>
-                
+                <span>No countries listed</span>
+
                 {% endfor %}
 
             </div>
@@ -78,27 +79,41 @@
 
 </div>
 
+
 <div class="comments-section">
     <h2>Comments ({{reviews.count}})</h2>
     {% for review in reviews %}
     <div class="comment-details">
-        <h4>{{review.name}}</h4>
+        <h4>{{review.user.first_name}}</h4>
         <p>{{review.comment}}</p>
+
+        <div class="rating-stars">
+            {% for i in "12345" %}
+            {% if forloop.counter <= review.rating %} <span class="star filled">★</span>
+                {% else %}
+                <span class="star">★</span>
+                {% endif %}
+                {% endfor %}
+        </div>
+
+
+        <!-- <p>{{review.rating}}</p> -->
         <p class="text-muted">{{review.review_date}}</p>
     </div>
     {% endfor %}
 </div>
+
+{% if request.user.is_authenticated %}
 
 <div class="comments-form">
     <form class="plant-form" action="{% url 'plants:add_review_view' plant.id%}" method="post">
         {% csrf_token %}
 
         <h2>Add a comment</h2>
-        <input class="form-control" name="name" required minlength="3" placeholder="Name">
-        <textarea class="form-control" name="comment" required minlength="3" placeholder="Comment">
-            </textarea>
+        <!-- <input class="form-control" name="name" required minlength="3" placeholder="Name"> -->
+        <textarea class="form-control" name="comment" required minlength="3" placeholder="Comment"></textarea>
         <select class="form-select" name="rating">
-            <option value="">Will you recommend it to a friend?</option>
+            <option value="">Would you recommend it to a friend?</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -111,6 +126,11 @@
     </form>
 </div>
 
+{% else %}
+    <div class="p-3 rounded bg-warning">
+        <p>Only registered users can add comments</p>
+    </div>
+{% endif %}
 
 <!-- Button trigger modal -->
 

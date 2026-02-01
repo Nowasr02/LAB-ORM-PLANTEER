@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block title %}Home{% endblock %}
 
@@ -11,11 +12,13 @@
 </div>
 
 
+
 <section class="newest">
     <h2>Discover Our Latest Plants</h2>
     <br>
     {% include 'plants/plants_list.html' %}
 
 </section>
+
 
 {% endblock %}

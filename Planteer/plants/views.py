@@ -4,6 +4,7 @@ from .models import Plant, Review, Country
 from .forms import PlantForm
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.db.models import Q, F, Count, Avg
 
 
 # Create your views here.
@@ -48,10 +49,12 @@ def add_plant_view(request : HttpRequest):
 def all_plants_view(request : HttpRequest):
     plants = Plant.objects.all().order_by("name")
     
+    #filter by category
     category = request.GET.get('category')
     if category:
         plants = plants.filter(category = category)
         
+    #filter by is_edible
     is_edible = request.GET.get('is_edible')
     if is_edible is not None and is_edible != "":
         if is_edible.lower() in ['1', 'true', 'yes']:
@@ -67,6 +70,8 @@ def all_plants_view(request : HttpRequest):
         
     countries = Country.objects.values_list('name', flat=True).distinct()
 
+    plants = plants.annotate(reviews_count = Count("review"))
+    
     #pagination      
     page_num = request.GET.get("page", 1)
     paginator = Paginator(plants, 6)
@@ -85,6 +90,9 @@ def plant_details_view(request : HttpRequest, plant_id:int):
     plant = Plant.objects.get(pk = plant_id)
     reviews = Review.objects.filter(plant = plant)
     
+    avg = reviews.aggregate(Avg("rating"))
+    print(avg)
+    
     same_category = Plant.objects.filter(category = plant.category)
     same_category = same_category.exclude(pk=plant.pk)
     same_category = same_category.order_by('-created_at')[:4]
@@ -92,7 +100,8 @@ def plant_details_view(request : HttpRequest, plant_id:int):
     return render(request, "plants/plant_details.html", {
         "plant": plant,
         "plants": same_category, 
-        "reviews" : reviews
+        "reviews" : reviews,
+        "average_rating" : avg["rating__avg"]
     })
 
 def update_plant_view(request : HttpRequest, plant_id:int):
@@ -147,12 +156,19 @@ def search_view(request : HttpRequest):
 
 def add_review_view(request : HttpRequest, plant_id):
     
+    if not request.user.is_authenticated:
+        messages.error(request, "Only registered users can add comments")
+        return redirect("accounts:sign_in")
+    
     if request.method == "POST":
         plant_object = Plant.objects.get(pk = plant_id)
-        new_review = Review(plant = plant_object, name = request.POST["name"],
+        new_review = Review(plant = plant_object, 
+                            user = request.user,
                             rating = request.POST["rating"],
                             comment = request.POST["comment"],
                             )
         new_review.save()
+    
+        messages.success(request, "Comment added successfully", "alert-success")
     
     return redirect('plants:plant_details_view', plant_id = plant_id)

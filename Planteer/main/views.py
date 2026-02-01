@@ -5,6 +5,7 @@ from .models import Contact
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.contrib import messages
 
 
 # Create your views here.
@@ -36,5 +37,7 @@ def contact_view(request:HttpRequest):
         email_message.content_subtype = "html"
         # email_message.connection = email_message.get_connection(True)
         email_message.send()
+        
+        messages.success(request, "We recieved your successfully", "alert-success")
 
     return render(request, 'main/contact.html' )
